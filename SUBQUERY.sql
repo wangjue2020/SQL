@@ -105,3 +105,20 @@ select employee_id from employees where department_id in (select department_id f
 select last_name, first_name from employees where manager_id in (select employee_id from employees where last_name='K_ing');
 #查询工资最高的员工的姓名， 要求first_name 和 last_name 显示为一列, 列名为姓.名
 select concat(upper(last_name),"  ", first_name)from employees where salary=(select max(salary) from employees );
+
+#查询工资最低的员工信息：last_name, salary
+select last_name, salary from employees where salary =(select min(salary) from employees);
+# 查询平均工资最低的部门信息
+select d.* , av.*
+from departments  d inner join (select avg(salary) as ave, department_id from employees group by department_id) as av on  d.department_id=av.department_id 
+where ave=(select min(salary) from (select avg(salary) as salary from employees group by department_id) as average);
+		# 方式二：
+select * from departments where department_id=(
+select department_id from employees group by department_id order by avg(salary) limit 1);
+
+#查询平均工资最低的部门信息和该部门的平均工资
+select d.*, av.* from departments d inner join (select department_id, avg(salary) as salary from employees group by department_id order by avg(salary) limit 1) as av on av.department_id=d.department_id;
+
+
+
+
