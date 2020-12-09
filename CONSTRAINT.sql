@@ -95,3 +95,54 @@ create table if not exists student_info(
     major_id int, 
     constraint FK_STUDENT_INFO_MAJOR foreign key(major_id) references major(id)
     );
+    
+    #二、修改表时添加约束
+    /*
+    1、添加列级约束
+		alter table 表名 modify column 字段名 字段类型 新约束；
+	2、添加表级约束
+		alter table 表名 add 【constraint 约束名】 约束类型（字段名） 外键的引用；
+	*/
+drop table if exists student_info;
+create table student_info(
+	id int,
+    student_name varchar(20),
+    gender char(1),
+    seat int,
+    age int,
+    major_id int
+    );
+    desc student_info;
+    
+#1、添加非空约束
+alter table student_info modify column student_name varchar(20) not null;
+#2、添加默认约束
+alter table student_info modify column age int default 18;
+#3、添加主键
+#列级约束
+alter table student_info modify column id int primary key;
+#表级约束
+alter table student_info add primary key(id);
+#4、添加唯一
+#列级约束
+alter table student_info modify column seat int unique;
+#表级约束
+alter table student_info add unique(seat);
+#5、添加外键
+alter table student_info add FOREIGN KEY(major_id) references major(id);
+alter table student_info add constraint FK_student_info FOREIGN KEY(major_id) references major(id);
+
+#三、修改表示删除约束
+#1、删除非空约束
+alter table student_info modify column student_name varchar(20) null;
+#2、删除默认约束
+alter table student_info modify column age int;
+#3、删除主键
+alter table student_info drop primary key;
+#4、删除唯一键
+alter table student_info drop index seat;
+show index from student_info;
+#5、删除外键
+alter table student_info drop FOREIGN KEY student_info_ibfk_1;
+
+
